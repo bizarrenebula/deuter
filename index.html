@@ -200,9 +200,17 @@ $("go").addEventListener("click", async () => {
     });
 
     card.innerHTML = "";
-    String(data.interpretation).split(/\n\n+/).forEach((p) => {
+    String(data.interpretation)
+    .replace(/\\n/g, "\n")
+    .split(/\n{2,}/)
+    .map((p) => p.trim())
+    .filter(Boolean)
+    .forEach((p) => {
       const el = document.createElement("p");
-      el.textContent = p;
+      p.split("\n").forEach((line, i) => {
+        if (i > 0) el.appendChild(document.createElement("br"));
+        el.appendChild(document.createTextNode(line));
+      });
       card.appendChild(el);
     });
     const sig = document.createElement("p");
